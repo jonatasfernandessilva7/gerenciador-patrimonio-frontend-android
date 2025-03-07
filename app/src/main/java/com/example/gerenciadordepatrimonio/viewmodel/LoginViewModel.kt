@@ -31,5 +31,3 @@ class LoginViewModel : ViewModel() {
         })
     }
 }
-
-data class LoginResult(val success: Boolean, val message: String)
