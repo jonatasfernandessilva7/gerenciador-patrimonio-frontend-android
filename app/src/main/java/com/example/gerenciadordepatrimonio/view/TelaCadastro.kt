@@ -11,7 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -82,9 +82,11 @@ fun TelaCadastro(cadastroViewModel: CadastroViewModel, navController: NavControl
             Text("Cadastrar")
         }
 
-        cadastroResult?.let {
-            navController.navigate("parabensVoceFoiCadastrado") {
-                popUpTo("telaCadastro") { inclusive = true }
+        cadastroResult?.let { response ->
+            if (response != null) {
+                navController.navigate("parabensVoceFoiCadastrado") {
+                    popUpTo("telaCadastro") { inclusive = true }
+                }
             }
         }
 

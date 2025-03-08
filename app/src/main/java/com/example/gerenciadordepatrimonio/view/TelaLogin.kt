@@ -68,9 +68,11 @@ fun TelaLogin(loginViewModel: LoginViewModel, navController: NavController) {
             Text("Entrar")
         }
 
-        loginResult?.let {
-            navController.navigate("telaInicio") {
-                popUpTo("telaLogin") { inclusive = true }
+        loginResult?.let { response ->
+            if (response != null) {
+                navController.navigate("telaInicio") {
+                    popUpTo("telaLogin") { inclusive = true }
+                }
             }
         }
 

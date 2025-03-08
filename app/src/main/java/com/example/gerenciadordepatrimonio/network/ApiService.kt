@@ -4,8 +4,9 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Path
+import com.example.gerenciadordepatrimonio.model.Patrimonio
+import retrofit2.Response
 
 // Modelo de usuário
 data class Usuario(
@@ -13,12 +14,6 @@ data class Usuario(
     val nome: String,
     val email: String,
     val senha: String?
-)
-
-data class Patrimonio(
-    val id: Int,
-    val nome: String,
-    val descricao: String
 )
 
 data class LoginRequest(val email: String, val senha: String)
@@ -37,8 +32,7 @@ interface ApiService {
     @GET("/perfil/{id}")
     fun obterPerfil(@Path("id") id: Int): Call<Usuario>
 
-    //patrimonio
-
-    @GET("/ver-todos-os-patrimonios")
-    suspend fun getPatrimonios(@Header("Authorization") token: String): List<Patrimonio>
+    // Patrimonio
+    @GET("patrimonios/{usuarioId}")
+    suspend fun getPatrimonios(@Path("usuarioId") usuarioId: Int): Response<List<Patrimonio>>
 }

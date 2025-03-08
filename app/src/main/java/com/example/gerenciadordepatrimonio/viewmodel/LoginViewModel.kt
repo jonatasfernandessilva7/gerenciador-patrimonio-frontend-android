@@ -1,5 +1,7 @@
 package com.example.gerenciadordepatrimonio.viewmodel
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
