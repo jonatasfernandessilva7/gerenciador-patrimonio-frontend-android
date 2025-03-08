@@ -11,7 +11,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -19,18 +18,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gerenciadordepatrimonio.viewmodel.LoginViewModel
-
+import com.example.gerenciadordepatrimonio.viewmodel.CadastroViewModel
 
 @Composable
-fun TelaLogin(loginViewModel: LoginViewModel, navController: NavController) {
+fun TelaCadastro(cadastroViewModel: CadastroViewModel, navController: NavController){
+    var nome by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
-    val loginResult by loginViewModel.loginResult.observeAsState()
+    val cadastroResult by cadastroViewModel.cadastroResult.observeAsState()
 
     Column(
         modifier = Modifier
@@ -38,6 +38,20 @@ fun TelaLogin(loginViewModel: LoginViewModel, navController: NavController) {
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
+
+        OutlinedTextField(
+            value = nome,
+            onValueChange = {
+                if (it.length <= 150) nome = it
+            },
+            label = { Text("Nome") },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text, // Isso permite entrada de texto (String)
+                imeAction = ImeAction.Done // Opcional, se você quiser controlar a ação do IME (teclado)
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -62,37 +76,27 @@ fun TelaLogin(loginViewModel: LoginViewModel, navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { loginViewModel.login(email, senha) },
+            onClick = { cadastroViewModel.cadastro(nome, email, senha) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Entrar")
+            Text("Cadastrar")
         }
 
-        loginResult?.let {
-            navController.navigate("telaInicio") {
-                popUpTo("telaLogin") { inclusive = true }
+        cadastroResult?.let {
+            navController.navigate("parabensVoceFoiCadastrado") {
+                popUpTo("telaCadastro") { inclusive = true }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { navController.navigate("telaCadastro") {
-                popUpTo("telaLogin") { inclusive = true }
+            onClick = { navController.navigate("telaLogin") {
+                popUpTo("telaCadastro") { inclusive = true }
             } },
             modifier = Modifier.fillMaxWidth()
-        ){
-            Text("Cadastre-se")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextButton(
-            onClick = { navController.navigate("esqueciASenha") {
-                popUpTo("telaLogin") { inclusive = true }
-            } }
         ) {
-            Text("Esqueci a senha")
+            Text("Voltar")
         }
     }
 }
