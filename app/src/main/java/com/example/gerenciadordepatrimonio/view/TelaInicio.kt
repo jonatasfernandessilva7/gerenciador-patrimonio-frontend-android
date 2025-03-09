@@ -1,93 +1,64 @@
 package com.example.gerenciadordepatrimonio.view
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.gerenciadordepatrimonio.viewmodel.PatrimonioViewModel
-import com.example.gerenciadordepatrimonio.model.Patrimonio
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.gerenciadordepatrimonio.R
 
 @Composable
-fun TelaInicio(navController: NavController, viewModel: PatrimonioViewModel) {
-    val patrimonios by viewModel.patrimonios.collectAsState()
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Bem-vindo a tela principal!",
-                modifier = Modifier.padding(16.dp),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Lista de Patrimônios
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
-            items(patrimonios) { patrimonio ->
-                PatrimonioItem(patrimonio)
-            }
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Botões de ação
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            IconButton(onClick = { /** Navegar para ver patrimônio */ }) {
-                Icon(Icons.Filled.List, contentDescription = "Ver Todo O Patrimônio")
-            }
-            IconButton(onClick = { /** Navegar para inserir patrimônio */ }) {
-                Icon(Icons.Filled.Add, contentDescription = "Inserir Novo Patrimônio")
-            }
-            IconButton(onClick = { /** Navegar para deletar patrimônio */ }) {
-                Icon(Icons.Filled.Delete, contentDescription = "Deletar Patrimônio")
-            }
-            IconButton(onClick = { /** Navegar para atualizar patrimônio */ }) {
-                Icon(Icons.Filled.Edit, contentDescription = "Atualizar Patrimônio")
-            }
-        }
-    }
-}
-
-@Composable
-fun PatrimonioItem(patrimonio: Patrimonio) {
-    Card(
+fun TelaInicio(navController: NavController
+){
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Nome: ${patrimonio.nome}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Valor: R$ ${patrimonio.valor}", style = MaterialTheme.typography.bodyMedium)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(32.dp)
+        ) {
+            // Logo
+            Icon(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                tint = Color.Unspecified,
+                modifier = Modifier.size(120.dp)
+            )
+
+
+            // Botão "Entrar"
+            Button(
+                onClick = { navController.navigate("telaLogin") {
+                    popUpTo("telaInicio") { inclusive = true }
+                } },
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF0E5A75) // Azul semelhante ao da imagem
+                ),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(text = "Avançar", color = Color.White, fontSize = 18.sp)
+            }
         }
     }
 }

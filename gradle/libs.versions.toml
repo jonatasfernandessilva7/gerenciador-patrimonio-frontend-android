@@ -16,6 +16,7 @@ runtimeLivedata = "1.7.8"
 ui = "1.7.8"
 roomCommon = "2.6.1"
 foundationLayoutAndroid = "1.7.2"
+cronetEmbedded = "119.6045.31"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+cronet-embedded = { group = "org.chromium.net", name = "cronet-embedded", version.ref = "cronetEmbedded" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

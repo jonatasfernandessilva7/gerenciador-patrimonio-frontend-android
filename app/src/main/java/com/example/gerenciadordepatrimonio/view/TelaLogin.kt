@@ -13,6 +13,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -25,12 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gerenciadordepatrimonio.viewmodel.LoginViewModel
 
-
 @Composable
 fun TelaLogin(loginViewModel: LoginViewModel, navController: NavController) {
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
-    val loginResult by loginViewModel.loginResult.observeAsState()
+    val token by loginViewModel.token.observeAsState()
 
     Column(
         modifier = Modifier
@@ -68,9 +68,10 @@ fun TelaLogin(loginViewModel: LoginViewModel, navController: NavController) {
             Text("Entrar")
         }
 
-        loginResult?.let { response ->
-            if (response != null) {
-                navController.navigate("telaInicio") {
+        // Se o token foi recebido, navega para a tela principal
+        if (!token.isNullOrEmpty()) {
+            LaunchedEffect(Unit) {
+                navController.navigate("telaPrincipal") {
                     popUpTo("telaLogin") { inclusive = true }
                 }
             }
@@ -79,20 +80,16 @@ fun TelaLogin(loginViewModel: LoginViewModel, navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { navController.navigate("telaCadastro") {
-                popUpTo("telaLogin") { inclusive = true }
-            } },
+            onClick = { navController.navigate("telaCadastro") },
             modifier = Modifier.fillMaxWidth()
-        ){
+        ) {
             Text("Cadastre-se")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
-            onClick = { navController.navigate("esqueciASenha") {
-                popUpTo("telaLogin") { inclusive = true }
-            } }
+            onClick = { navController.navigate("esqueciASenha") }
         ) {
             Text("Esqueci a senha")
         }
