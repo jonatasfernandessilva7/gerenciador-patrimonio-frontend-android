@@ -1,6 +1,5 @@
 package com.example.gerenciadordepatrimonio
 
-import TelaPatrimonios
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -48,6 +47,9 @@ class MainActivity : ComponentActivity() {
                             route = "telaPatrimonio"
                         ){
                             TelaPatrimonios(navController)
+                        }
+                        composable("telaCadastroPatrimonio"){
+                            TelaCadastroPatrimonio(navController)
                         }
                     }
                 }

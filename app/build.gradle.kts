@@ -41,6 +41,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
     implementation (libs.androidx.navigation.compose)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

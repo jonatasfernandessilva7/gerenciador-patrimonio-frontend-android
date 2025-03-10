@@ -3,6 +3,12 @@ package com.example.gerenciadordepatrimonio.view
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -60,26 +66,50 @@ fun Perfil(navController: NavController, loginViewModel: LoginViewModel) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { isEditing = true }) {
-                Text("Mudar Dados")
-            }
-
-            Button(onClick = { navController.navigate("telaPrincipal") }) {
-                Text("<-")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             if (isEditing) {
+                // Botões de "Cancelar" e "Salvar" aparecem quando "Mudar Dados" é clicado
                 Button(onClick = { isEditing = false }) {
                     Text("Cancelar")
                 }
+
                 Button(onClick = {
                     isEditing = false
                     // Aqui você pode chamar a função para salvar os dados no backend
                 }) {
                     Text("Salvar")
                 }
+            } else {
+                // Botões padrão quando não está no modo de edição
+                Button(onClick = { isEditing = true }) {
+                    Text("Alterar Dados")
+                }
+
+                Button(onClick = { navController.navigate("telaPrincipal") }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Botões de ação
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            IconButton(onClick = { navController.navigate("telaPrincipal") }) {
+                Icon(Icons.Filled.Home, contentDescription = "Voltar A Tela Principal")
+            }
+            IconButton(onClick = { navController.navigate("telaPatrimonio") }) {
+                Icon(Icons.Filled.List, contentDescription = "Ver Todo O Patrimônio")
+            }
+            IconButton(onClick = { navController.navigate("telaCadastroPatrimonio") }) {
+                Icon(Icons.Filled.Add, contentDescription = "Adicionar Patrimônio")
+            }
+            IconButton(onClick = { navController.navigate("perfil") }) {
+                Icon(Icons.Filled.Person, contentDescription = "Tela De Perfil")
             }
         }
     }

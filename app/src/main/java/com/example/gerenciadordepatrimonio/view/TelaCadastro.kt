@@ -82,12 +82,8 @@ fun TelaCadastro(cadastroViewModel: CadastroViewModel, navController: NavControl
             Text("Cadastrar")
         }
 
-        cadastroResult?.let { response ->
-            if (response != null) {
-                navController.navigate("parabensVoceFoiCadastrado") {
-                    popUpTo("telaCadastro") { inclusive = true }
-                }
-            }
+        cadastroResult?.let {
+            navController.navigate("parabensVoceFoiCadastrado")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

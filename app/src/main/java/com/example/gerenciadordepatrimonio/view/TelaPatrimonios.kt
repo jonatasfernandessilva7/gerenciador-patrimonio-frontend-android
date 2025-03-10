@@ -1,3 +1,6 @@
+package com.example.gerenciadordepatrimonio.view
+
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.gerenciadordepatrimonio.model.PatrimonioResponse
@@ -25,40 +29,47 @@ class TelaPatrimonios(navController: NavHostController) : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PatrimoniosScreen<Any>()
+            PatrimoniosScreen()
         }
     }
 }
 
 @Composable
-fun <Patrimonio> PatrimoniosScreen() {
+fun PatrimoniosScreen() {
     val patrimonioList = remember { mutableStateListOf<PatrimonioResponse>() }
     val coroutineScope = rememberCoroutineScope()
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            val token = "Bearer " + getTokenFromStorage()
-            RetrofitClient.instance.getPatrimonios(token).enqueue(object : Callback<List<PatrimonioResponse>> { // Corrigido: Callback com lista
-                override fun onResponse(call: Call<List<PatrimonioResponse>>, response: Response<List<PatrimonioResponse>>) {
-                    if (response.isSuccessful) {
-                        response.body()?.let {
-                            patrimonioList.addAll(it) // Adiciona a lista de patrimônios
-                        }
-                        isLoading = false
-                    } else {
-                        errorMessage = "Erro ao carregar patrimônios"
-                        isLoading = false
-                    }
-                }
+    // Recupera o ID do usuário logado armazenado no SharedPreferences
+    val userId = getUserIdFromStorage()
 
-                override fun onFailure(call: Call<List<PatrimonioResponse>>, t: Throwable) {
-                    errorMessage = "Falha na conexão"
-                    isLoading = false
-                    Log.e("API_ERROR", t.message ?: "Erro desconhecido")
-                }
-            })
+    LaunchedEffect(Unit) {
+        if (userId != null) {
+            coroutineScope.launch {
+                RetrofitClient.instance.getPatrimonios(userId).enqueue(object : Callback<List<PatrimonioResponse>> {
+                    override fun onResponse(call: Call<List<PatrimonioResponse>>, response: Response<List<PatrimonioResponse>>) {
+                        if (response.isSuccessful) {
+                            response.body()?.let {
+                                patrimonioList.addAll(it) // Adiciona a lista de patrimônios
+                            }
+                            isLoading = false
+                        } else {
+                            errorMessage = "Erro ao carregar patrimônios"
+                            isLoading = false
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<PatrimonioResponse>>, t: Throwable) {
+                        errorMessage = "Falha na conexão"
+                        isLoading = false
+                        Log.e("API_ERROR", t.message ?: "Erro desconhecido")
+                    }
+                })
+            }
+        } else {
+            errorMessage = "ID do usuário não encontrado"
+            isLoading = false
         }
     }
 
@@ -68,16 +79,12 @@ fun <Patrimonio> PatrimoniosScreen() {
         Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp))
     } else {
         LazyColumn {
-            items(patrimonioList) { patrimonio -> // Corrigido: Usa PatrimonioResponse
+            items(patrimonioList) { patrimonio ->
                 Card(
-                    // ...
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Corrigido: CardElevation
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
-                    Column {
-                        // ... (acessar dados com patrimonio.patrimonio.bens etc.)
-                        Text(text = "Bens: ${patrimonio.patrimonio.bens.imoveis.size} Imóveis, ${patrimonio.patrimonio.bens.veiculos.size} Veículos")
-                        Text(text = "Direitos: ${patrimonio.patrimonio.direitos.size}")
-                        Text(text = "Obrigações: ${patrimonio.patrimonio.obrigacoes.size}")
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(text = "Patrimônio ID: ${patrimonio.patrimonio.id}") // Ajuste para mostrar o ID
                     }
                 }
             }
@@ -85,7 +92,14 @@ fun <Patrimonio> PatrimoniosScreen() {
     }
 }
 
-// Simulação de função para obter token do SharedPreferences
-fun getTokenFromStorage(): String {
-    return "seu_token_aqui" // Aqui você deve buscar o token real do SharedPreferences
+@Composable
+fun getUserIdFromStorage(): Int? {
+    // Acessa o contexto atual
+    val context = LocalContext.current
+
+    // Acessa o SharedPreferences
+    val sharedPreferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+
+    // Retorna o ID do usuário ou null caso não encontrado
+    return sharedPreferences.getInt("user_id", -1).takeIf { it != -1 }
 }

@@ -12,12 +12,6 @@ import com.example.gerenciadordepatrimonio.model.Usuario
 data class LoginRequest(val email: String, val senha: String)
 data class LoginResponse(val token: String, val user: Usuario, val success: Boolean, val id: Int)
 
-data class UserResponse(
-    val id: Int,
-    val nome: String,
-    val email: String
-)
-
 data class CadastroRequest(val nome: String, val email: String, val senha: String)
 data class CadastroResponse(val user: Usuario, val sucesso: Boolean)
 
@@ -34,8 +28,9 @@ interface ApiService {
     fun getUserData(
         @Header("Authorization") token: String,
         @Path("id") id: String
-    ): Call<UserResponse>
+    ): Call<Usuario>
 
-    @GET("patrimonios")
-    fun getPatrimonios(@Header("Authorization") token: String): Call<List<PatrimonioResponse>>
+    @GET("patrimonios/user/{userId}")
+    fun getPatrimonios(@Path("userId") userId: Int): Call<List<PatrimonioResponse>>
+
 }

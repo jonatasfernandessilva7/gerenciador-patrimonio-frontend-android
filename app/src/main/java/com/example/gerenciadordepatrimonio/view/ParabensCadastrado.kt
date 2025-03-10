@@ -44,9 +44,7 @@ fun ParabensVoceFoiCadastrado(navController: NavController) {
         // Botão de Voltar
         Button(
             onClick = {
-                navController.navigate("telaLogin") {
-                    popUpTo("parabensVoceFoiCadastrado") { inclusive = true }
-                }
+                navController.navigate("telaLogin")
             },
             modifier = Modifier.fillMaxWidth()
         ) {
